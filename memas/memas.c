@@ -26,6 +26,11 @@ void pico_set_led(bool led_on) {
 
 }
 
+uint32_t read_memory(uint32_t address) {
+    volatile uint32_t *ptr = (volatile uint32_t *)address;
+    return *ptr;
+}
+
 int main()
 {
     stdio_init_all();
@@ -35,28 +40,37 @@ int main()
     }
 
     while (true) {
-        char st = getchar();
+        char command[20]; 
+        char* line = fgets(command, sizeof(command), stdin);
 
-        if (st == 'e'){
+        if (!line) {
+            printf("Ошибка чтения ввода.\n");
+            continue; 
+        }
+
+        
+        command[strcspn(command, "\n")] = 0;
+
+        if (strcmp(command, "led_on") == 0) {
             pico_set_led(true);
-        }
-
-        if (st == 'd'){
+            printf("Светодиод ВКЛ\n");
+        } else if (strcmp(command, "led_off") == 0) {
             pico_set_led(false);
-        }
-        if (st == 'm'){
-            st = getchar();
-            if (st == 'e'){
-                st = getchar();
-                if (st == 'm'){
-                    pico_set_led(true);
-                    sleep_ms(1000);     // тута нужно принять 8 символов и выплюнуть нужные 8 символов
-                    char* s = readline();
-                    pico_set_led(false);
-                }
-            }
-        }
-    }
+            printf("Светодиод ВЫКЛ\n");
+        } else if (strncmp(command, "read_mem ", 9) == 0) {
+            char *address_str = command + 9;
+            char *endptr;
+            uint32_t address = strtol(address_str, &endptr, 16);
 
-    sleep_ms(10);
+            if (*endptr != '\0' && *endptr != ' ') {
+                printf("Неверный формат адреса.\n");
+            } else {
+                uint32_t value = read_memory(address);
+                printf("Память по адресу 0x%08X: 0x%08X\n", address, value);
+            }
+        } else {
+            printf("Неизвестная команда.\n");
+        }
+        sleep_ms(10);
+    }
 }
