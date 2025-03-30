@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
-with open('D:\git\RPi pico\hello_adc\data.csv', 'r') as FtoP:
+with open('D:\git\RPi pico\hello_adc\data_con.csv', 'r') as FtoP:
     data = FtoP.read().split()
     FtoP.close()
 
@@ -25,12 +25,12 @@ ax.set_title('График зав-ти напряжения от времени'
 ax.grid(True, which='both', color='grey')    # сетка
 ax.yaxis.set_major_locator(MultipleLocator(0.5))
 ax.yaxis.set_minor_locator(MultipleLocator(0.1))
-ax.xaxis.set_major_locator(MultipleLocator(1))
-ax.xaxis.set_minor_locator(MultipleLocator(0.2))
+ax.xaxis.set_major_locator(MultipleLocator(10))
+ax.xaxis.set_minor_locator(MultipleLocator(2))
 #plt.text(-0.42, 2.75, '^')
 #plt.text(-0.3, 2.74, 'V,В', color='blue')
 #plt.text(8.9, 0.08, '>')
 #plt.text(8.9, 0.02, 't,с', color='blue')
 ax.legend()
-fig.savefig('graphic.svg')
+fig.savefig('graphic_con.svg')
 plt.show()
