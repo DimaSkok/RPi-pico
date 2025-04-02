@@ -32,7 +32,7 @@ try:
     
     
     print("2-й этап")
-    while (float(response) >= 0.5):
+    while (float(response) >= 0.3):
         ser.write(('d' + '\n').encode('utf-8'))
         response = ser.readline().decode().strip()  
         writer(response, (tim_e - tim_s))
